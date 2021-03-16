@@ -31,6 +31,9 @@ def create_app(config_class=Config):
         from app.blueprints.auth import bp as auth
         app.register_blueprint(auth)
 
+        from app.blueprints.shop import bp as shop
+        app.register_blueprint(shop)
+
         from . import routes
 
     return app
