@@ -10,7 +10,7 @@
             <a class="nav-link" href="{{ url_for('register') }}">Register</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="{{ url_for('createpost') }}">Create A Post</a>
+            <a class="nav-link" href="{{ url_for('blog.createpost') }}">Create A Post</a>
           </li>
         </ul>
         <ul class="navbar-nav ms-auto">
@@ -21,7 +21,7 @@
             </a>
             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
               <li><a class="dropdown-item" href="{{ url_for('myinfo') }}">My Info</a></li>
-              <li><a class="dropdown-item" href="{{ url_for('myposts') }}">My Posts</a></li>
+              <li><a class="dropdown-item" href="{{ url_for('blog.myposts') }}">My Posts</a></li>
               <li><hr class="dropdown-divider"></li>
               <li><a class="dropdown-item" href="{{ url_for('logout') }}">Logout</a></li>
             </ul>
