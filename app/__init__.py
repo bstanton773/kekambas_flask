@@ -5,17 +5,29 @@ from flask_migrate import Migrate
 from flask_mail import Mail, Message
 from flask_login import LoginManager
 
-app = Flask(__name__)
-app.config.from_object(Config)
 
-db = SQLAlchemy(app)
-migrate = Migrate(app, db)
+db = SQLAlchemy()
+migrate = Migrate()
+mail = Mail()
+login = LoginManager()
 
-mail = Mail(app)
+def create_app(config_class=Config):
+    app = Flask(__name__)
+    app.config.from_object(config_class)
 
-login = LoginManager(app)
-login.login_view = 'login'
-login.login_message = "you can't be here!"
-login.login_message_category = 'danger'
+    db.init_app(app)
+    migrate.init_app(app, db)
+    mail.init_app(app)
+    login.init_app(app) 
 
-from app import routes, models
+    login.login_view = 'login'
+    login.login_message = "you can't be here!"
+    login.login_message_category = 'danger'
+
+    with app.app_context():
+        from app.blueprints.blog import bp as blog
+        app.register_blueprint(blog)
+
+        from . import routes
+
+    return app

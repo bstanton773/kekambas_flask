@@ -39,6 +39,13 @@ class Post(db.Model):
     def __repr__(self):
         return f'<Post: {self.title}>'
 
+    def to_dict(self):
+        return {
+            'title': self.title,
+            'content': self.content,
+            'user_id': self.user_id
+        }
+
 
 class Kekambas(db.Model):
     id = db.Column(db.Integer, primary_key=True)
