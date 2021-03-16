@@ -8,7 +8,7 @@
     {% if current_user.is_authenticated %}
     <h4>Hello, {{ current_user.username }}</h4>
     {% else %}
-    <h4>Hello, please register for our blog <a href="{{ url_for('register') }}">here</a></h4>
+    <h4>Hello, please register for our blog <a href="{{ url_for('auth.register') }}">here</a></h4>
     {% endif %}
     
     {% for p in posts %}

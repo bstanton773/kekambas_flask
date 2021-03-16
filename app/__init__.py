@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask
 from config import Config
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
@@ -27,6 +27,9 @@ def create_app(config_class=Config):
     with app.app_context():
         from app.blueprints.blog import bp as blog
         app.register_blueprint(blog)
+
+        from app.blueprints.auth import bp as auth
+        app.register_blueprint(auth)
 
         from . import routes
 
