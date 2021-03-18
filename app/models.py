@@ -41,9 +41,11 @@ class Post(db.Model):
 
     def to_dict(self):
         return {
+            'id': self.id,
             'title': self.title,
             'content': self.content,
-            'user_id': self.user_id
+            'date_created': self.date_created,
+            'user': User.query.get(self.user_id).username
         }
 
 

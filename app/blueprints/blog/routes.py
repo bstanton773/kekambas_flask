@@ -6,6 +6,18 @@ from .forms import PostForm
 from app.models import Post
 
 
+@blog.route('/posts', methods=['GET'])
+def posts():
+    posts = Post.query.all()
+    return jsonify([p.to_dict() for p in posts])
+
+
+@blog.route('/posts/<int:id>', methods=['GET'])
+def post(id):
+    p = Post.query.get_or_404(id)
+    return jsonify(p.to_dict())
+
+
 @blog.route('/createpost', methods=['GET', 'POST'])
 @login_required
 def createpost():
