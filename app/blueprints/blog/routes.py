@@ -1,44 +1,58 @@
 from . import bp as blog
-from flask import request, redirect, url_for, jsonify, render_template
+from flask import redirect, url_for, jsonify, render_template, request
 from app import db
 from flask_login import login_required, current_user
 from .forms import PostForm
 from app.models import Post
+from app.auth import token_auth
 
 
 @blog.route('/posts', methods=['GET'])
+@token_auth.login_required
 def posts():
     posts = Post.query.all()
     return jsonify([p.to_dict() for p in posts])
 
 
 @blog.route('/posts/<int:id>', methods=['GET'])
+@token_auth.login_required
 def post(id):
     p = Post.query.get_or_404(id)
     return jsonify(p.to_dict())
 
 
-@blog.route('/createpost', methods=['GET', 'POST'])
-@login_required
+@blog.route('/createpost', methods=['POST'])
+@token_auth.login_required
 def createpost():
-    title = "Kekambas Blog | CREATE POST"
-    post = PostForm()
-    if request.method == 'POST' and post.validate():
-        post_title = post.title.data
-        content = post.content.data
-        user_id = current_user.id
-        # print(post_title, content)
-        # Create new Post instance
-        new_post = Post(post_title, content, user_id)
-        # Add new post instance to database
-        db.session.add(new_post)
-        # Commit
-        db.session.commit()
-        # flash a message
-        flash("You have successfully created a post!", 'success')
-        # redirect back to create post
-        return redirect(url_for('createpost'))
-    return render_template('create_post.html', post=post, title=title)
+    data = request.json
+    user = token_auth.current_user()
+    p = Post(data['title'], data['content'], user.id)
+    db.session.add(p)
+    db.session.commit()
+    return jsonify(p.to_dict())
+
+
+# @blog.route('/createpost', methods=['GET', 'POST'])
+# @login_required
+# def createpost():
+#     title = "Kekambas Blog | CREATE POST"
+#     post = PostForm()
+#     if request.method == 'POST' and post.validate():
+#         post_title = post.title.data
+#         content = post.content.data
+#         user_id = current_user.id
+#         # print(post_title, content)
+#         # Create new Post instance
+#         new_post = Post(post_title, content, user_id)
+#         # Add new post instance to database
+#         db.session.add(new_post)
+#         # Commit
+#         db.session.commit()
+#         # flash a message
+#         flash("You have successfully created a post!", 'success')
+#         # redirect back to create post
+#         return redirect(url_for('createpost'))
+#     return render_template('create_post.html', post=post, title=title)
 
 
 @blog.route('/myposts')

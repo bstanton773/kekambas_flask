@@ -1,6 +1,6 @@
 from . import bp as shop
 from .models import Product
-from flask import jsonify
+from flask import jsonify, request
 
 
 @shop.route('/products')
@@ -19,3 +19,8 @@ def single_product(id):
     """
     p = Product.query.get_or_404(id)
     return jsonify(p.to_dict())
+
+@shop.route('test', methods=['POST'])
+def test():
+    print(request.json)
+    return jsonify(request.json)
